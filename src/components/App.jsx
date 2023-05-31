@@ -1,3 +1,5 @@
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Component } from 'react';
 import * as API from './Api/Api';
 import SearchBar from './Searchbar/Searchbar';
@@ -5,6 +7,17 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Loader } from './Loader/Loader';
 import { Button } from './Button/Button';
 import { Text } from './App.styled';
+
+const notifyOptions = {
+  position: 'top-center',
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: 'colored',
+};
 
 export default class App extends Component {
   state = {
@@ -43,8 +56,7 @@ export default class App extends Component {
       const data = await API.getImages(searchName, currentPage);
 
       if (data.hits.length === 0) {
-        alert('Sorry image not found...');
-        return;
+        return toast.error('Sorry image not found...', notifyOptions);
       }
       const normalizedImages = API.normalizedImages(data.hits);
       this.setState(state => ({
@@ -77,6 +89,7 @@ export default class App extends Component {
         {images.length > 0 && totalPages !== currentPage && !isLoading && (
           <Button onClick={this.loadMore} />
         )}
+        <ToastContainer />
       </div>
     );
   }
